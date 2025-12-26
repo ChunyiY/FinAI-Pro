@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Models and data
+models/*.pth
+models/*.h5
+*.pkl
+data/
+*.csv
+*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Environment variables
+.env
+.env.local
+
+# API Keys (keep config.py.example instead)
+config.py
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
