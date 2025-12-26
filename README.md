@@ -40,11 +40,11 @@
 
 The industry-grade alpha engine generates risk-adjusted portfolio weights through a three-layer pipeline: Alpha Generation → Risk Adjustment → Portfolio Allocation.
 
-![Cross-Sectional Alpha Engine](screenshots/ Cross-sectional engine.png)
+![Cross-Sectional Alpha Engine](screenshots/%20Cross-sectional%20engine.png)
 
 *Cross-Sectional Alpha Engine interface showing multi-stock input, model configuration, and real-time alpha signal generation.*
 
-![Cross-Sectional Alpha Results](screenshots/ Cross-sectional alpha results.png)
+![Cross-Sectional Alpha Results](screenshots/%20Cross-sectional%20alpha%20results.png)
 
 *Detailed results table displaying alpha_raw, alpha_z-score, volatility, risk-adjusted alpha, and final portfolio weights. The system ranks stocks relative to each other on the same trading day, applying mandatory risk adjustment before allocation.*
 
@@ -56,7 +56,7 @@ Deep learning LSTM models for single-asset price forecasting with interactive vi
 
 *LSTM Price Forecast module showing historical price trends and future predictions with confidence intervals.*
 
-![LSTM Graph Example](screenshots/ LSTM graph example.png)
+![LSTM Graph Example](screenshots/%20LSTM%20graph%20example.png)
 
 *Interactive chart displaying model performance metrics (RMSE, MAE, MAPE) and prediction accuracy over time.*
 
@@ -64,11 +64,11 @@ Deep learning LSTM models for single-asset price forecasting with interactive vi
 
 XGBoost/LightGBM-based direction classifier optimized for small-sample financial data with walk-forward validation.
 
-![Gradient Boosting Direction](screenshots/ Gradient Boosting DIrection.png)
+![Gradient Boosting Direction](screenshots/%20Gradient%20Boosting%20DIrection.png)
 
 *Gradient Boosting Direction module interface with conservative hyperparameters to prevent overfitting.*
 
-![Gradient Boosting Results](screenshots/ Gradient Boosting gragh results.png)
+![Gradient Boosting Results](screenshots/%20Gradient%20Boosting%20gragh%20results.png)
 
 *Model performance visualization showing prediction accuracy, feature importance, and confusion matrix analysis.*
 
@@ -76,7 +76,7 @@ XGBoost/LightGBM-based direction classifier optimized for small-sample financial
 
 Modern Portfolio Theory (MPT) implementation with efficient frontier analysis and multiple optimization strategies.
 
-![Portfolio Optimization](screenshots/ Portfolio Optimization entrance.png)
+![Portfolio Optimization](screenshots/%20Portfolio%20Optimization%20entrance.png)
 
 *Portfolio Optimization module with risk-return optimization, efficient frontier visualization, and comparative analysis across different optimization methods (Maximize Sharpe Ratio, Minimize Volatility, Maximize Return).*
 
@@ -84,7 +84,7 @@ Modern Portfolio Theory (MPT) implementation with efficient frontier analysis an
 
 Real-time financial news analysis using advanced NLP techniques (VADER, TextBlob) with market impact assessment.
 
-![Sentiment Analysis](screenshots/ Sentiment Analysis Example.png)
+![Sentiment Analysis](screenshots/%20Sentiment%20Analysis%20Example.png)
 
 *Sentiment Analysis dashboard showing overall sentiment scores, positive/neutral/negative breakdown, and detailed article-level analysis with sentiment impact assessment.*
 
