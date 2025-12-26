@@ -34,6 +34,62 @@
 
 ---
 
+## Platform Screenshots
+
+### Cross-Sectional Alpha Engine ⭐ **Flagship Feature**
+
+The industry-grade alpha engine generates risk-adjusted portfolio weights through a three-layer pipeline: Alpha Generation → Risk Adjustment → Portfolio Allocation.
+
+![Cross-Sectional Alpha Engine](screenshots/ Cross-sectional engine.png)
+
+*Cross-Sectional Alpha Engine interface showing multi-stock input, model configuration, and real-time alpha signal generation.*
+
+![Cross-Sectional Alpha Results](screenshots/ Cross-sectional alpha results.png)
+
+*Detailed results table displaying alpha_raw, alpha_z-score, volatility, risk-adjusted alpha, and final portfolio weights. The system ranks stocks relative to each other on the same trading day, applying mandatory risk adjustment before allocation.*
+
+### Time-Series Stock Prediction
+
+Deep learning LSTM models for single-asset price forecasting with interactive visualizations.
+
+![LSTM Prediction](screenshots/LSTM.png)
+
+*LSTM Price Forecast module showing historical price trends and future predictions with confidence intervals.*
+
+![LSTM Graph Example](screenshots/ LSTM graph example.png)
+
+*Interactive chart displaying model performance metrics (RMSE, MAE, MAPE) and prediction accuracy over time.*
+
+### Gradient Boosting Direction Classifier
+
+XGBoost/LightGBM-based direction classifier optimized for small-sample financial data with walk-forward validation.
+
+![Gradient Boosting Direction](screenshots/ Gradient Boosting DIrection.png)
+
+*Gradient Boosting Direction module interface with conservative hyperparameters to prevent overfitting.*
+
+![Gradient Boosting Results](screenshots/ Gradient Boosting gragh results.png)
+
+*Model performance visualization showing prediction accuracy, feature importance, and confusion matrix analysis.*
+
+### Portfolio Optimization
+
+Modern Portfolio Theory (MPT) implementation with efficient frontier analysis and multiple optimization strategies.
+
+![Portfolio Optimization](screenshots/ Portfolio Optimization entrance.png)
+
+*Portfolio Optimization module with risk-return optimization, efficient frontier visualization, and comparative analysis across different optimization methods (Maximize Sharpe Ratio, Minimize Volatility, Maximize Return).*
+
+### Sentiment Analysis
+
+Real-time financial news analysis using advanced NLP techniques (VADER, TextBlob) with market impact assessment.
+
+![Sentiment Analysis](screenshots/ Sentiment Analysis Example.png)
+
+*Sentiment Analysis dashboard showing overall sentiment scores, positive/neutral/negative breakdown, and detailed article-level analysis with sentiment impact assessment.*
+
+---
+
 ## Architecture Overview
 
 ### System Components
