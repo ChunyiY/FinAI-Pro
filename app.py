@@ -19,30 +19,30 @@ warnings.filterwarnings('ignore')
 
 # Import custom modules - Use Real Data Fetcher (only real market data)
 try:
-    from real_data_fetcher import RealDataFetcher
+    from data_fetchers.real_data_fetcher import RealDataFetcher
     USE_REAL_FETCHER = True
 except ImportError:
     try:
-        from smart_data_fetcher import SmartDataFetcher
+        from data_fetchers.smart_data_fetcher import SmartDataFetcher
         USE_REAL_FETCHER = False
         USE_SMART_FETCHER = True
     except ImportError:
         try:
-            from multi_source_fetcher import MultiSourceDataFetcher
+            from data_fetchers.multi_source_fetcher import MultiSourceDataFetcher
             USE_REAL_FETCHER = False
             USE_SMART_FETCHER = False
             USE_MULTI_SOURCE = True
         except ImportError:
-            from data_fetcher import StockDataFetcher
+            from data_fetchers.data_fetcher import StockDataFetcher
             USE_REAL_FETCHER = False
             USE_SMART_FETCHER = False
             USE_MULTI_SOURCE = False
 
-from stock_predictor import StockPredictor, EnsembleStockPredictor
-from robust_stock_predictor import RobustStockPredictor
-from sentiment_analyzer import SentimentAnalyzer
-from portfolio_optimizer import PortfolioOptimizer
-from utils import format_currency, format_percentage
+from models.stock_predictor import StockPredictor, EnsembleStockPredictor
+from models.robust_stock_predictor import RobustStockPredictor
+from core.sentiment_analyzer import SentimentAnalyzer
+from core.portfolio_optimizer import PortfolioOptimizer
+from core.utils import format_currency, format_percentage
 
 # Cross-Sectional Alpha Engine (NEW - Industry-grade module)
 from alpha import CrossSectionalAlphaEngine, CrossSectionalEvaluator

@@ -143,13 +143,24 @@ finai-pro/
 │   ├── __init__.py
 │   └── allocator.py         # Weight calculation with constraints
 │
-├── Core Modules/
-│   ├── data_fetcher.py      # Data fetching (Alpha Vantage)
-│   ├── stock_predictor.py   # LSTM time-series model
-│   ├── robust_stock_predictor.py  # XGBoost/LightGBM classifier
-│   ├── sentiment_analyzer.py      # NLP sentiment analysis
-│   ├── portfolio_optimizer.py     # MPT optimization
-│   └── utils.py                   # Utility functions
+├── data_fetchers/          # Data Fetching Modules
+│   ├── __init__.py
+│   ├── data_fetcher.py     # Base data fetcher
+│   ├── real_data_fetcher.py # Alpha Vantage fetcher
+│   ├── smart_data_fetcher.py # Smart fallback fetcher
+│   ├── multi_source_fetcher.py # Multi-source fetcher
+│   └── demo_data.py        # Demo data generator
+│
+├── models/                 # Prediction Models
+│   ├── __init__.py
+│   ├── stock_predictor.py  # LSTM time-series model
+│   └── robust_stock_predictor.py # XGBoost/LightGBM classifier
+│
+├── core/                   # Core Business Logic
+│   ├── __init__.py
+│   ├── sentiment_analyzer.py # NLP sentiment analysis
+│   ├── portfolio_optimizer.py # MPT optimization
+│   └── utils.py            # Utility functions
 │
 ├── docs/                    # Documentation (optional)
 │
@@ -175,8 +186,8 @@ finai-pro/
 
 **Usage Example:**
 ```python
-from stock_predictor import StockPredictor
-from data_fetcher import StockDataFetcher
+from models.stock_predictor import StockPredictor
+from data_fetchers.data_fetcher import StockDataFetcher
 
 fetcher = StockDataFetcher()
 predictor = StockPredictor()
@@ -208,8 +219,10 @@ The cross-sectional alpha engine generates risk-adjusted portfolio weights by:
 from alpha import CrossSectionalAlphaEngine
 from risk import RiskAdjustmentLayer
 from portfolio import PortfolioAllocator
+from data_fetchers.real_data_fetcher import RealDataFetcher
 
 # Initialize components
+fetcher = RealDataFetcher()
 engine = CrossSectionalAlphaEngine(model_type='xgboost')
 risk_layer = RiskAdjustmentLayer()
 allocator = PortfolioAllocator(mode='long_only', max_weight=0.15)
