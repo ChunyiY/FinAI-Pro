@@ -229,7 +229,10 @@ class PortfolioOptimizer:
                 stats = self.calculate_portfolio_stats(weights, returns)
                 comparison[method] = {
                     'weights': {returns.columns[i]: weights[i] for i in range(num_assets)},
-                    **stats
+                    'expected_return': stats['return'],  # Use 'expected_return' for consistency
+                    'volatility': stats['volatility'],
+                    'sharpe_ratio': stats['sharpe_ratio'],
+                    'optimization_success': True
                 }
             else:
                 result = self.optimize_portfolio(returns, method=method)

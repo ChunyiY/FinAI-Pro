@@ -108,87 +108,116 @@ class RealDataFetcher:
         # For daily data, use TIME_SERIES_DAILY
         function = 'TIME_SERIES_DAILY'
         
-        # Map period to outputsize
-        # 'compact' returns last 100 data points (free tier)
-        # 'full' returns full history (premium tier)
-        outputsize = 'compact'  # Free tier only supports compact
+        # Try 'full' first (premium feature), fallback to 'compact' if not available
+        # 'full' returns complete history (20+ years) - premium feature
+        # 'compact' returns last 100 data points - free tier
+        outputsize_options = ['full', 'compact']
         
         url = 'https://www.alphavantage.co/query'
-        params = {
-            'function': function,
-            'symbol': symbol,
-            'apikey': self.api_key,
-            'outputsize': outputsize,
-            'datatype': 'json'
-        }
         
-        try:
-            response = requests.get(url, params=params, timeout=15)
-            response.raise_for_status()
-            data = response.json()
-            
-            # Check for API errors
-            if 'Error Message' in data:
-                raise Exception(f"Alpha Vantage API Error: {data['Error Message']}")
-            
-            if 'Note' in data:
-                raise Exception(f"Alpha Vantage API Note: {data['Note']}")
-            
-            if 'Information' in data:
-                raise Exception(f"Alpha Vantage API Info: {data['Information']}")
-            
-            # Check for time series data
-            if 'Time Series (Daily)' not in data:
-                # Try to find what keys are available for debugging
-                available_keys = list(data.keys())
-                raise Exception(
-                    f"No time series data found. "
-                    f"Response keys: {available_keys}. "
-                    f"Full response: {str(data)[:200]}"
-                )
-            
-            # Convert to DataFrame
-            time_series = data['Time Series (Daily)']
-            df = pd.DataFrame.from_dict(time_series, orient='index')
-            df.index = pd.to_datetime(df.index)
-            
-            # Rename columns (Alpha Vantage uses '1. open', '2. high', etc.)
-            column_mapping = {
-                '1. open': 'Open',
-                '2. high': 'High',
-                '3. low': 'Low',
-                '4. close': 'Close',
-                '5. volume': 'Volume'
+        # Try 'full' first, then fallback to 'compact' if premium not available
+        for outputsize in outputsize_options:
+            params = {
+                'function': function,
+                'symbol': symbol,
+                'apikey': self.api_key,
+                'outputsize': outputsize,
+                'datatype': 'json'
             }
-            df = df.rename(columns=column_mapping)
             
-            # Convert to float
-            for col in ['Open', 'High', 'Low', 'Close', 'Volume']:
-                if col in df.columns:
-                    df[col] = pd.to_numeric(df[col], errors='coerce')
+            try:
+                response = requests.get(url, params=params, timeout=15)
+                response.raise_for_status()
+                data = response.json()
+                
+                # Check for API errors
+                if 'Error Message' in data:
+                    raise Exception(f"Alpha Vantage API Error: {data['Error Message']}")
+                
+                if 'Note' in data:
+                    raise Exception(f"Alpha Vantage API Note: {data['Note']}")
+                
+                # Check if this is a premium feature error
+                if 'Information' in data:
+                    info_msg = data['Information'].lower()
+                    # If it's a premium feature error and we're trying 'full', fallback to 'compact'
+                    if 'premium' in info_msg and outputsize == 'full':
+                        print(f"⚠️  Premium feature not available. Using 'compact' mode (last ~100 data points).")
+                        continue  # Try 'compact' instead
+                    else:
+                        raise Exception(f"Alpha Vantage API Info: {data['Information']}")
             
-            # Sort by date
-            df = df.sort_index()
-            
-            # Filter by period if needed (compact only returns ~100 days)
-            end_date = datetime.now()
-            period_map = {
-                '1d': 1, '5d': 5, '1mo': 30, '3mo': 90,
-                '6mo': 180, '1y': 365, '2y': 730
-            }
-            days = period_map.get(period, 365)
-            start_date = end_date - timedelta(days=days)
-            df = df[df.index >= start_date]
-            
-            if df.empty:
-                return None
-            
-            return df
-            
-        except requests.exceptions.RequestException as e:
-            raise Exception(f"Network error: {str(e)}")
-        except Exception as e:
-            raise Exception(f"Error processing Alpha Vantage response: {str(e)}")
+                # Check for time series data
+                if 'Time Series (Daily)' not in data:
+                    # Try to find what keys are available for debugging
+                    available_keys = list(data.keys())
+                    raise Exception(
+                        f"No time series data found. "
+                        f"Response keys: {available_keys}. "
+                        f"Full response: {str(data)[:200]}"
+                    )
+                
+                # Convert to DataFrame
+                time_series = data['Time Series (Daily)']
+                df = pd.DataFrame.from_dict(time_series, orient='index')
+                df.index = pd.to_datetime(df.index)
+                
+                # Rename columns (Alpha Vantage uses '1. open', '2. high', etc.)
+                column_mapping = {
+                    '1. open': 'Open',
+                    '2. high': 'High',
+                    '3. low': 'Low',
+                    '4. close': 'Close',
+                    '5. volume': 'Volume'
+                }
+                df = df.rename(columns=column_mapping)
+                
+                # Convert to float
+                for col in ['Open', 'High', 'Low', 'Close', 'Volume']:
+                    if col in df.columns:
+                        df[col] = pd.to_numeric(df[col], errors='coerce')
+                
+                # Sort by date
+                df = df.sort_index()
+                
+                # Filter by period if needed
+                # Note: 'compact' returns ~100 days, 'full' returns all history
+                end_date = datetime.now()
+                period_map = {
+                    '1d': 1, '5d': 5, '1mo': 30, '3mo': 90,
+                    '6mo': 180, '1y': 365, '2y': 730, '5y': 1825, '10y': 3650
+                }
+                days = period_map.get(period, 365)
+                start_date = end_date - timedelta(days=days)
+                df = df[df.index >= start_date]
+                
+                if df.empty:
+                    return None
+                
+                # Successfully got data, return it
+                if outputsize == 'full':
+                    print(f"✓ Successfully fetched full historical data for {symbol}")
+                else:
+                    print(f"✓ Fetched data for {symbol} (compact mode, ~100 days)")
+                
+                return df
+                
+            except requests.exceptions.RequestException as e:
+                # Network error, try next option or raise
+                if outputsize == 'full':
+                    print(f"⚠️  Network error with 'full' mode, trying 'compact'...")
+                    continue
+                raise Exception(f"Network error: {str(e)}")
+            except Exception as e:
+                # Other errors, if we're trying 'full', fallback to 'compact'
+                if outputsize == 'full' and 'premium' not in str(e).lower():
+                    print(f"⚠️  Error with 'full' mode: {str(e)[:100]}. Trying 'compact'...")
+                    continue
+                # If we're already on 'compact' or it's not a premium error, raise
+                raise Exception(f"Error processing Alpha Vantage response: {str(e)}")
+        
+        # If we get here, both 'full' and 'compact' failed
+        raise Exception("Failed to fetch data with both 'full' and 'compact' outputsize options")
     
     def _add_technical_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """Add technical indicators to the dataframe."""
